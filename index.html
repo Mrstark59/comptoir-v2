@@ -11,30 +11,61 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+body{background:#0e0e0e;color:#e8e4dd;font-family:'Inter',sans-serif;font-weight:300}
+a{text-decoration:none;color:inherit}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;background:#0e0e0e;color:#e8e4dd;-webkit-font-smoothing:antialiased}
-img{max-width:100%;display:block}
-a{color:inherit;text-decoration:none}
-button{font-family:inherit;cursor:pointer}
 
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:22px 40px;background:linear-gradient(#0e0e0e 30%,transparent)}
-.logo{font-family:'Cormorant Garamond',serif;font-size:26px;letter-spacing:4px;font-weight:600}
-.nav-liens{display:flex;gap:30px;list-style:none}
-.nav-liens a{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#9a958d;transition:color .3s}
-.nav-liens a:hover{color:#fff}
-
-.hero{height:100vh;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:0 40px 70px;background:url('https://i.postimg.cc/K8SSx53H/ltd.png') center/cover no-repeat, #111}
-.hero::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(14,14,14,.9))}
-.hero h1{position:relative;z-index:2;font-family:'Cormorant Garamond',serif;font-size:clamp(42px,7vw,90px);font-weight:500;letter-spacing:1px}
-.lien-hero{position:relative;z-index:2;margin-top:20px;font-size:13px;letter-spacing:3px;text-transform:uppercase;border-bottom:1px solid #e8e4dd;padding-bottom:6px;width:fit-content;transition:opacity .3s}
+/* ============ HERO ============ */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:0 20px 50px;
+}
+.hero h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(48px,8vw,110px);font-weight:500;
+  letter-spacing:2px;max-width:900px;line-height:1.1;
+}
+.lien-hero{
+  margin-top:50px;font-size:12px;letter-spacing:3px;
+  text-transform:uppercase;color:#c8a24a;
+  border-bottom:1px solid #c8a24a;padding-bottom:6px;
+  transition:opacity .3s;
+}
 .lien-hero:hover{opacity:.6}
 
+/* ============ NAVIGATION ============ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 40px;
+  background:linear-gradient(#0e0e0e 30%,transparent);
+}
+.logo{font-family:'Cormorant Garamond',serif;font-size:26px;letter-spacing:4px;font-weight:600}
+.nav-liens{display:flex;gap:30px;list-style:none}
+.nav-liens a{
+  font-size:12px;letter-spacing:2px;text-transform:uppercase;
+  color:#9a958d;transition:color .3s;
+}
+.nav-liens a:hover{color:#fff}
+
+/* ============ SECTIONS ============ */
 section{padding:100px 40px;max-width:1300px;margin:0 auto}
-.titre-section{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,4vw,52px);font-weight:500;margin-bottom:50px}
+.titre-section{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(32px,4vw,52px);font-weight:500;margin-bottom:50px;
+}
 .sous-titre{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#c8a24a;margin-bottom:12px}
 
-.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:30px}
-.carte{background:#161616;border:1px solid #232323;display:flex;flex-direction:column;overflow:hidden;transition:border-color .3s}
+/* ============ GRILLE ARTICLES ============ */
+.grille{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:30px;
+}
+.carte{
+  background:#161616;border:1px solid #232323;
+  display:flex;flex-direction:column;overflow:hidden;
+  transition:border-color .3s;
+}
 .carte:hover{border-color:#c8a24a}
 .carte img{height:300px;width:100%;object-fit:cover}
 .carte-contenu{padding:22px;display:flex;flex-direction:column;gap:8px;flex:1}
@@ -42,29 +73,53 @@ section{padding:100px 40px;max-width:1300px;margin:0 auto}
 .carte-nom{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500}
 .carte-desc{font-size:13px;color:#9a958d;font-weight:300;flex:1}
 .carte-prix{font-size:16px;font-weight:500;margin-top:8px}
-.btn-ajouter{margin-top:14px;padding:12px;background:transparent;border:1px solid #3a3a3a;color:#e8e4dd;font-size:11px;letter-spacing:2px;text-transform:uppercase;transition:all .3s}
+.btn-ajouter{
+  margin-top:14px;padding:12px;
+  background:transparent;border:1px solid #3a3a3a;color:#e8e4dd;
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;transition:all .3s;
+}
 .btn-ajouter:hover{background:#e8e4dd;color:#0e0e0e;border-color:#e8e4dd}
 
-.panier-flottant{position:fixed;bottom:30px;right:30px;z-index:90;background:#c8a24a;color:#0e0e0e;padding:14px 24px;border:none;font-weight:500;font-size:13px;letter-spacing:1px;box-shadow:0 10px 30px rgba(0,0,0,.5);display:none}
+/* ============ PANIER FLOTTANT ============ */
+.panier-flottant{
+  position:fixed;bottom:30px;right:30px;z-index:90;
+  background:#c8a24a;color:#0e0e0e;
+  padding:14px 24px;border:none;font-weight:500;
+  font-size:13px;letter-spacing:1px;
+  box-shadow:0 10px 30px rgba(0,0,0,.5);
+  display:none;
+}
 
+/* ============ A PROPOS ============ */
 .a-propos{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
 .a-propos p{color:#9a958d;line-height:1.9;font-weight:300;font-size:15px}
 
-.contact-lignes div{padding:24px 0;border-bottom:1px solid #232323;display:flex;justify-content:space-between}
-.contact-lignes span:first-child{color:#9a958d;font-size:13px}
-.contact-lignes span:last-child{font-size:15px}
+/* ============ CONTACT ============ */
+.contact-lignes{display:flex;flex-direction:column;gap:24px;max-width:500px}
+.contact-lignes div{border-bottom:1px solid #232323;padding-bottom:16px;color:#9a958d;font-size:14px}
 
-.admin-box{max-width:600px;margin:0 auto}
-.admin-box input,.admin-box textarea,.admin-box select{width:100%;padding:14px;margin-bottom:16px;background:#161616;border:1px solid #2a2a2a;color:#e8e4dd;font-family:inherit;font-size:14px}
+/* ============ ADMIN ============ */
+.admin-box{max-width:600px;margin:0 auto;text-align:left}
+.admin-box input,.admin-box textarea{
+  width:100%;padding:14px;margin-bottom:12px;
+  background:#161616;border:1px solid #232323;color:#e8e4dd;
+  font-family:'Inter',sans-serif;font-size:14px;
+}
 .admin-box input:focus,.admin-box textarea:focus{outline:none;border-color:#c8a24a}
-.btn-principal{width:100%;padding:16px;background:#e8e4dd;color:#0e0e0e;border:none;font-size:12px;letter-spacing:3px;text-transform:uppercase;font-weight:500}
+.btn-principal{
+  padding:14px 30px;background:#e8e4dd;color:#0e0e0e;border:none;
+  font-size:12px;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;font-weight:500;transition:background .3s;
+}
 .btn-principal:hover{background:#c8a24a}
 .liste-admin .carte{flex-direction:row;align-items:center;margin-bottom:12px}
 .liste-admin .carte img{height:80px;width:80px}
-.btn-supprimer{background:none;border:none;color:#a33;font-size:18px;padding:0 16px}
+.btn-supprimer{background:none;border:none;color:#a33;font-size:18px;padding:0 16px;cursor:pointer}
 
 footer{padding:50px 40px;text-align:center;color:#555;font-size:12px;letter-spacing:2px}
 
+/* ============ MOBILE ============ */
 @media(max-width:768px){
   nav{padding:18px 20px}
   .nav-liens{gap:14px}
@@ -77,6 +132,7 @@ footer{padding:50px 40px;text-align:center;color:#555;font-size:12px;letter-spac
 </head>
 <body>
 
+<!-- NAVIGATION -->
 <nav>
   <div class="logo">LTD</div>
   <ul class="nav-liens">
@@ -88,17 +144,20 @@ footer{padding:50px 40px;text-align:center;color:#555;font-size:12px;letter-spac
   </ul>
 </nav>
 
+<!-- HERO -->
 <div class="hero" id="hero">
   <h1>Par amour du produit.</h1>
   <a class="lien-hero" href="#articles">Découvrir nos articles</a>
 </div>
 
+<!-- ARTICLES -->
 <section id="articles">
   <div class="sous-titre">La sélection</div>
   <h2 class="titre-section">Nos articles</h2>
   <div class="grille" id="grille-articles"></div>
 </section>
 
+<!-- A PROPOS -->
 <section id="apropos">
   <div class="a-propos">
     <div>
@@ -111,16 +170,18 @@ footer{padding:50px 40px;text-align:center;color:#555;font-size:12px;letter-spac
   </div>
 </section>
 
+<!-- CONTACT -->
 <section id="contact">
   <div class="sous-titre">Parlons-en</div>
   <h2 class="titre-section">Nous contacter</h2>
   <div class="contact-lignes">
-    <div><span>Adresse</span><span>Ton adresse ici</span></div>
-    <div><span>Téléphone</span><span>Ton numéro ici</span></div>
-    <div><span>Email</span><span>ton@email.fr</span></div>
+    <div>📍 Ton adresse ici</div>
+    <div>📞 Ton numéro ici</div>
+    <div>✉️ ton@email.fr</div>
   </div>
 </section>
 
+<!-- ADMIN -->
 <section id="admin">
   <div class="admin-box">
     <div class="sous-titre">Espace réservé</div>
@@ -132,8 +193,8 @@ footer{padding:50px 40px;text-align:center;color:#555;font-size:12px;letter-spac
       <input type="text" id="a-nom" placeholder="Nom de l'article">
       <input type="text" id="a-prix" placeholder="Prix (ex: 4.50)">
       <input type="text" id="a-categorie" placeholder="Catégorie (Boissons, Snacks...)">
-      <input type="text" id="a-image" placeholder="Lien image (postimg...)" style="margin-bottom:16px">
-      <textarea id="a-desc" placeholder="Description" rows="3" style="margin-bottom:16px"></textarea>
+      <input type="text" id="a-image" placeholder="Lien image (postimg...)">
+      <textarea id="a-desc" placeholder="Description" rows="3"></textarea>
       <button class="btn-principal" onclick="ajouterArticle()">Ajouter l'article</button>
       <div class="liste-admin" id="liste-admin" style="margin-top:40px"></div>
     </div>
@@ -146,11 +207,11 @@ footer{padding:50px 40px;text-align:center;color:#555;font-size:12px;letter-spac
 
 <script>
 // ============ SUPABASE ============
-const SUPABASE_URL = 'https://piwgefenaufyifluvqyi.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_IDT8jTObs4jDyiQsuKnB5A_SMN00rw3';
+const SUPABASE_URL = 'TON-URL-SUPABASE';       // ← remplace par ton URL (Project Settings > API)
+const SUPABASE_KEY = 'TA-CLE-PUBLIQUE';        // ← remplace par ta clé "anon public"
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let panier = {};
+let panier = {}; // {nom: {prix, qte}}
 
 // ============ CHARGEMENT DES ARTICLES ============
 async function chargerArticles(){
@@ -168,7 +229,7 @@ function afficherArticles(articles){
         <div class="carte-categorie">${a.categorie}</div>
         <div class="carte-nom">${a.nom}</div>
         <div class="carte-desc">${a.description||''}</div>
-        <div class="carte-prix">${a.prix.toFixed(2)} $</div>
+        <div class="carte-prix">${a.prix.toFixed(2)} €</div>
         <button class="btn-ajouter" onclick="ajouterPanier('${a.nom.replace(/'/g,"\\'")}', ${a.prix})">Ajouter</button>
       </div>
     </div>
@@ -181,25 +242,19 @@ function ajouterPanier(nom, prix){
   panier[nom].qte++;
   majPanier();
 }
+
 function majPanier(){
   const btn = document.getElementById('panier-flottant');
   let total = 0, nb = 0;
   for(const n in panier){ total += panier[n].prix * panier[n].qte; nb += panier[n].qte; }
   if(nb === 0){ btn.style.display='none'; return; }
   btn.style.display='block';
-  btn.textContent = `Total : ${total.toFixed(2)} $ (${nb} art.)`;
+  btn.textContent = `Total : ${total.toFixed(2)} € (${nb} art.)`;
 }
-window.addEventListener('beforeunload', () => { panier = {}; });
 
-// ============ ADMIN (mot de passe lu dans la base) ============
-async function connexionAdmin(){
-  const mdp = document.getElementById('mdp-admin').value;
-  const { data, error } = await supabase
-    .from('parametres')
-    .select('valeur')
-    .eq('cle', 'mdp_admin')
-    .single();
-  if(!error && data && data.valeur === mdp){
+// ============ ADMIN ============
+function connexionAdmin(){
+  if(document.getElementById('mdp-admin').value === 'ltd2024'){
     document.getElementById('zone-admin').style.display = 'block';
     document.getElementById('mdp-admin').value = '';
     chargerListeAdmin();
@@ -233,7 +288,7 @@ async function chargerListeAdmin(){
     <div class="carte">
       <img src="${a.image}">
       <div class="carte-contenu" style="flex-direction:row;justify-content:space-between;align-items:center">
-        <div>${a.nom} — ${a.prix.toFixed(2)} $</div>
+        <div>${a.nom} — ${a.prix.toFixed(2)} €</div>
         <button class="btn-supprimer" onclick="supprimerArticle(${a.id})">✕</button>
       </div>
     </div>
