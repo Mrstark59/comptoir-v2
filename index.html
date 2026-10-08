@@ -1,79 +1,293 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LTD Grove Street — Le Comptoir</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LTD — Limited</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+:root {
+  --noir:#0d0d0d;
+  --noir-2:#161616;
+  --rouge:#e01b1b;
+  --rouge-fonce:#8f0f0f;
+  --blanc:#f5f5f5;
+  --gris:#a0a0a0;
+}
+body { background:var(--noir); color:var(--blanc); min-height:100vh; }
+
+/* ===== HEADER ===== */
+header {
+  background:rgba(13,13,13,.92); backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(224,27,27,.35);
+  padding:14px 20px; position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+}
+.logo { font-weight:800; font-size:1.4rem; letter-spacing:1px; }
+.logo span {
+  background:var(--rouge); color:#fff;
+  padding:3px 10px; border-radius:8px; margin-right:8px;
+  box-shadow:0 0 18px rgba(224,27,27,.5);
+}
+.logo em { color:var(--gris); font-style:normal; font-weight:300; font-size:.85rem; display:block; letter-spacing:4px; }
+nav { display:flex; gap:6px; flex-wrap:wrap; }
+nav a {
+  color:var(--gris); text-decoration:none; padding:8px 16px;
+  border-radius:10px; font-size:.92rem; transition:.2s; cursor:pointer;
+}
+nav a:hover { color:#fff; background:rgba(255,255,255,.06); }
+nav a.actif { color:#fff; background:var(--rouge); box-shadow:0 0 14px rgba(224,27,27,.4); }
+
+/* ===== PAGES ===== */
+.page { display:none; animation:fade .4s ease; max-width:1100px; margin:0 auto; padding:35px 20px 90px; }
+.page.visible { display:block; }
+@keyframes fade { from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:none;} }
+h2 { font-size:1.6rem; font-weight:800; margin-bottom:6px; }
+h2 b { color:var(--rouge); }
+.sous-titre { color:var(--gris); font-size:.9rem; margin-bottom:25px; }
+
+/* ===== BANNIÈRE (page articles) ===== */
+.banniere {
+  background:linear-gradient(120deg, rgba(224,27,27,.18), rgba(0,0,0,0) 55%),
+    var(--noir-2);
+  border:1px solid rgba(224,27,27,.25);
+  border-radius:20px; padding:30px; margin-bottom:30px;
+}
+.banniere h1 { font-size:1.9rem; font-weight:800; }
+.banniere h1 span { color:var(--rouge); }
+.banniere p { color:var(--gris); margin-top:6px; font-size:.95rem; }
+
+/* ===== FILTRES ===== */
+.filtres { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px; }
+.filtres button {
+  background:var(--noir-2); color:var(--gris); border:1px solid #2a2a2a;
+  padding:8px 18px; border-radius:30px; cursor:pointer; font-size:.88rem; transition:.2s;
+}
+.filtres button:hover { color:#fff; border-color:var(--rouge); }
+.filtres button.on { background:var(--rouge); color:#fff; border-color:var(--rouge); }
+
+/* ===== CARTES ARTICLES ===== */
+.grille { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:20px; }
+.carte {
+  background:var(--noir-2); border:1px solid #242424; border-radius:18px;
+  overflow:hidden; transition:.25s;
+}
+.carte:hover { transform:translateY(-6px); border-color:rgba(224,27,27,.6); box-shadow:0 14px 30px rgba(224,27,27,.15); }
+.carte img { width:100%; height:170px; object-fit:cover; display:block; }
+.carte .info { padding:16px; }
+.carte h3 { font-size:1rem; font-weight:600; }
+.carte .desc { color:var(--gris); font-size:.82rem; margin:5px 0 12px; min-height:2.2em; }
+.carte .bas { display:flex; align-items:center; justify-content:space-between; }
+.carte .prix { color:var(--rouge); font-weight:800; font-size:1.15rem; }
+.carte button {
+  background:var(--rouge); color:#fff; border:none; padding:8px 14px;
+  border-radius:10px; cursor:pointer; font-size:.8rem; font-weight:600; transition:.2s;
+}
+.carte button:hover { background:var(--rouge-fonce); }
+.cat-tag {
+  display:inline-block; background:rgba(224,27,27,.12); color:var(--rouge);
+  font-size:.7rem; padding:3px 10px; border-radius:20px; margin-bottom:8px; letter-spacing:1px; text-transform:uppercase;
+}
+
+/* ===== PAGES INFO ===== */
+.carte-info { background:var(--noir-2); border:1px solid #242424; border-radius:18px; padding:28px; margin-bottom:16px; line-height:1.7; color:#ccc; }
+.carte-info strong { color:#fff; }
+.carte-info h3 { color:var(--rouge); margin-bottom:10px; }
+
+/* ===== ADMIN ===== */
+.champ { margin-bottom:14px; }
+.champ label { display:block; font-size:.82rem; color:var(--gris); margin-bottom:5px; }
+.champ input, .champ textarea, .champ select {
+  width:100%; background:var(--noir-2); border:1px solid #2a2a2a; color:#fff;
+  padding:12px 14px; border-radius:12px; font-size:.92rem; outline:none; transition:.2s;
+}
+.champ input:focus, .champ textarea:focus, .champ select:focus { border-color:var(--rouge); }
+.btn-rouge {
+  background:var(--rouge); color:#fff; border:none; padding:13px 30px;
+  border-radius:12px; font-weight:700; cursor:pointer; font-size:.95rem; transition:.2s;
+}
+.btn-rouge:hover { background:var(--rouge-fonce); box-shadow:0 0 18px rgba(224,27,27,.4); }
+
+/* ===== BARRE TOTAL ===== */
+#bar-total {
+  position:fixed; bottom:0; left:0; right:0; z-index:60;
+  background:rgba(22,22,22,.97); border-top:1px solid rgba(224,27,27,.4);
+  display:none; justify-content:space-between; align-items:center;
+  padding:14px 22px; backdrop-filter:blur(8px);
+}
+#bar-total .total { font-weight:800; font-size:1.1rem; }
+#bar-total .total span { color:var(--rouge); }
+</style>
 </head>
 <body>
 
-  <!-- NAVIGATION -->
-  <nav class="navbar">
-    <div class="nav-logo">
-      <span class="logo-badge">LTD</span>
-      <span class="logo-text">Grove Street</span>
-    </div>
-    <ul class="nav-links">
-      <li><a href="index.html" class="active">Accueil</a></li>
-      <li><a href="articles.html">Articles</a></li>
-      <li><a href="index.html#apropos">À propos de nous</a></li>
-      <li><a href="index.html#contact">Nous contacter</a></li>
-    </ul>
+<header>
+  <div class="logo"><span>LTD</span> Limited<em>GROVE STREET</em></div>
+  <nav>
+    <a class="actif" onclick="aller('articles')">Articles</a>
+    <a onclick="aller('apropos')">À propos</a>
+    <a onclick="aller('contact')">Contact</a>
+    <a onclick="aller('admin')">Admin</a>
   </nav>
+</header>
 
-  <!-- HERO -->
-  <header class="hero">
-    <h1>Bienvenue au <span>Comptoir</span></h1>
-    <p>Découvrez tous les articles proposés par le LTD Grove Street</p>
-    <a href="articles.html" class="btn">Voir les articles</a>
-  </header>
+<!-- ================= ARTICLES ================= -->
+<div id="articles" class="page visible">
+  <div class="banniere">
+    <h1>Nos <span>articles</span></h1>
+    <p>Découvrez tous les produits proposés au comptoir.</p>
+  </div>
+  <div class="filtres" id="filtres"></div>
+  <div class="grille" id="liste-articles"></div>
+</div>
 
-  <!-- A PROPOS -->
-  <section id="apropos" class="section">
-    <h2>À propos de nous</h2>
-    <div class="cards">
-      <div class="card">
-        <h3>🏪 Notre magasin</h3>
-        <p>Le LTD Grove Street est votre supérette de quartier, au cœur du quartier. Produits frais, épicerie, boissons et services de proximité.</p>
-      </div>
-      <div class="card">
-        <h3>🤝 Notre équipe</h3>
-        <p>Une équipe disponible et à votre écoute, avec le sourire, du matin au soir.</p>
-      </div>
-      <div class="card">
-        <h3>✅ Notre engagement</h3>
-        <p>Des prix justes, des produits de qualité et un accueil irréprochable pour tous nos clients.</p>
-      </div>
+<!-- ================= À PROPOS ================= -->
+<div id="apropos" class="page">
+  <h2>À <b>propos</b></h2>
+  <p class="sous-titre">Qui sommes-nous ?</p>
+  <div class="carte-info">
+    <h3>🏆 LTD — Limited</h3>
+    <p>LTD est une entreprise établie sur Grove Street. Le comptoir présente à nos salariés l'ensemble des articles disponibles, avec les prix et descriptions à jour en temps réel.</p>
+  </div>
+  <div class="carte-info">
+    <h3>🎯 Notre mission</h3>
+    <p>Offrir un aperçu simple, clair et moderne des produits proposés, directement accessible depuis la tablette au comptoir.</p>
+  </div>
+</div>
+
+<!-- ================= CONTACT ================= -->
+<div id="contact" class="page">
+  <h2>Nous <b>contacter</b></h2>
+  <p class="sous-titre">Une question ? Retrouvez-nous.</p>
+  <div class="carte-info">
+    <h3>📍 Adresse</h3>
+    <p>Grove Street — au comptoir de la boutique.</p>
+  </div>
+  <div class="carte-info">
+    <h3>🕒 Horaires</h3>
+    <p>À définir selon vos besoins.</p>
+  </div>
+</div>
+
+<!-- ================= ADMIN ================= -->
+<div id="admin" class="page">
+  <h2>Espace <b>Admin</b></h2>
+  <p class="sous-titre">Accès réservé.</p>
+  <div class="carte-info" id="login-box">
+    <div class="champ"><label>Mot de passe</label>
+      <input type="password" id="mdp" onkeydown="if(event.key==='Enter')connexion()"></div>
+    <button class="btn-rouge" onclick="connexion()">Se connecter</button>
+  </div>
+  <div id="form-admin" style="display:none">
+    <div class="carte-info">
+      <h3>➕ Nouvel article</h3>
+      <div class="champ"><label>Nom de l'article *</label><input id="a-nom"></div>
+      <div class="champ"><label>Catégorie</label>
+        <select id="a-cat">
+          <option>Boissons</option><option>Nourriture</option>
+          <option>Divers</option>
+        </select></div>
+      <div class="champ"><label>Prix ($) *</label><input id="a-prix" type="number" step="0.01"></div>
+      <div class="champ"><label>Lien image (postimage)</label><input id="a-img"></div>
+      <div class="champ"><label>Description</label><textarea id="a-desc" rows="3"></textarea></div>
+      <button class="btn-rouge" onclick="ajouterArticle()">Ajouter l'article</button>
     </div>
-  </section>
+  </div>
+</div>
 
-  <!-- CONTACT -->
-  <section id="contact" class="section section-alt">
-    <h2>Nous contacter</h2>
-    <div class="contact-grid">
-      <div class="contact-item">
-        <h3>📍 Adresse</h3>
-        <p>Grove Street, Los Santos</p>
-      </div>
-      <div class="contact-item">
-        <h3>🕐 Horaires</h3>
-        <p>Ouvert tous les jours<br>6h00 — 23h00</p>
-      </div>
-      <div class="contact-item">
-        <h3>📞 Téléphone</h3>
-        <p>[Numéro à renseigner]</p>
-      </div>
-    </div>
-  </section>
+<!-- ===== BARRE TOTAL ===== -->
+<div id="bar-total">
+  <div class="total">Total : <span id="total">0.00</span> $</div>
+  <button class="btn-rouge" style="padding:9px 20px;font-size:.85rem" onclick="viderPanier()">Tout effacer</button>
+</div>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <p>© 2026 LTD Grove Street — Site interne, réservé au personnel</p>
-  </footer>
+<script>
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const MDP_ADMIN = "CHANGE-MOI";
+let panier = 0, total = 0, tousLesArticles = [];
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js"></script>
-  <script src="script.js"></script>
+function aller(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('visible'));
+  document.getElementById(id).classList.add('visible');
+  document.querySelectorAll('nav a').forEach(a => a.classList.toggle('actif', a.textContent.toLowerCase().includes(id)));
+  window.scrollTo(0,0);
+}
+
+function connexion() {
+  if (document.getElementById('mdp').value === MDP_ADMIN) {
+    document.getElementById('login-box').style.display = 'none';
+    document.getElementById('form-admin').style.display = 'block';
+  } else alert("Mot de passe incorrect");
+}
+
+function filtres(cats) {
+  const f = document.getElementById('filtres');
+  f.innerHTML = `<button class="on" onclick="filtrer('Tout',this)">Tout</button>` +
+    cats.map(c => `<button onclick="filtrer('${c}',this)">${c}</button>`).join('');
+}
+function filtrer(cat, btn) {
+  document.querySelectorAll('.filtres button').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  afficher(cat === 'Tout' ? tousLesArticles : tousLesArticles.filter(a => a.categorie === cat));
+}
+function afficher(data) {
+  const cont = document.getElementById('liste-articles');
+  if (!data.length) { cont.innerHTML = '<p style="color:#a0a0a0">Aucun article.</p>'; return; }
+  cont.innerHTML = data.map(a => `
+    <div class="carte">
+      ${a.image ? `<img src="${a.image}" alt="${a.nom}" onerror="this.style.display='none'">` : ''}
+      <div class="info">
+        <span class="cat-tag">${a.categorie || 'Divers'}</span>
+        <h3>${a.nom}</h3>
+        <div class="desc">${a.description || ''}</div>
+        <div class="bas">
+          <div class="prix">${Number(a.prix).toFixed(2)} $</div>
+          <button onclick="ajouterPanier(${a.prix})">＋ Panier</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+async function chargerArticles() {
+  const { data, error } = await sb.from('articles').select('*').order('id', { ascending:false });
+  const cont = document.getElementById('liste-articles');
+  if (error) { cont.innerHTML = '<p style="color:red">Erreur : '+error.message+'</p>'; return; }
+  tousLesArticles = data || [];
+  const cats = [...new Set(tousLesArticles.map(a => a.categorie).filter(Boolean))];
+  filtres(cats);
+  afficher(tousLesArticles);
+}
+
+async function ajouterArticle() {
+  const nom = document.getElementById('a-nom').value.trim();
+  const prix = parseFloat(document.getElementById('a-prix').value);
+  if (!nom || isNaN(prix)) { alert("Nom et prix obligatoires !"); return; }
+  const { error } = await sb.from('articles').insert({
+    nom, prix,
+    categorie: document.getElementById('a-cat').value,
+    image: document.getElementById('a-img').value.trim(),
+    description: document.getElementById('a-desc').value.trim()
+  });
+  if (error) { alert("Erreur : " + error.message); return; }
+  ['a-nom','a-prix','a-img','a-desc'].forEach(id => document.getElementById(id).value='');
+  chargerArticles(); aller('articles');
+}
+
+function ajouterPanier(prix) {
+  total += prix; panier++;
+  document.getElementById('total').textContent = total.toFixed(2);
+  document.getElementById('bar-total').style.display = 'flex';
+}
+function viderPanier() {
+  total = 0; panier = 0;
+  document.getElementById('total').textContent = "0.00";
+  document.getElementById('bar-total').style.display = 'none';
+}
+
+chargerArticles();
+</script>
 </body>
 </html>
